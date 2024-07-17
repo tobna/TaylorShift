@@ -1,5 +1,11 @@
-from timm.models.vision_transformer import VisionTransformer, Block, PatchEmbed, Attention
-from utils import ResizingInterface
+import torch
+from timm.models.vision_transformer import (
+    VisionTransformer,
+    Block,
+    PatchEmbed,
+    Attention,
+)
+from resizing_interface import ResizingInterface
 
 
 class _MatrixSaveAttn(Attention):
@@ -7,14 +13,20 @@ class _MatrixSaveAttn(Attention):
 
     @classmethod
     def cast(cls, attn: Attention):
-        assert isinstance(attn, Attention), "Can only save attention from Timms attention class"
+        assert isinstance(
+            attn, Attention
+        ), "Can only save attention from Timms attention class"
         attn.__class__ = cls
         assert isinstance(attn, _MatrixSaveAttn)
         return attn
 
     def forward(self, x):
         B, N, C = x.shape
-        qkv = self.qkv(x).reshape(B, N, 3, self.num_heads, C // self.num_heads).permute(2, 0, 3, 1, 4)
+        qkv = (
+            self.qkv(x)
+            .reshape(B, N, 3, self.num_heads, C // self.num_heads)
+            .permute(2, 0, 3, 1, 4)
+        )
         q, k, v = qkv.unbind(0)  # make torchscript happy (cannot use tensor as tuple)
 
         attn = (q @ k.transpose(-2, -1)) * self.scale
@@ -25,6 +37,14 @@ class _MatrixSaveAttn(Attention):
         x = (attn @ v).transpose(1, 2).reshape(B, N, C)
         x = self.proj(x)
         x = self.proj_drop(x)
+        return x
+
+
+class DebugBlock(Block):
+    def forward(self, x: torch.Tensor, debug=False) -> torch.Tensor:
+        kwargs = {} if not debug else dict(debug=debug)
+        x = x + self.drop_path1(self.ls1(self.attn(self.norm1(x), **kwargs)))
+        x = x + self.drop_path2(self.ls2(self.mlp(self.norm2(x))))
         return x
 
 
@@ -45,6 +65,7 @@ class TimmViT(VisionTransformer, ResizingInterface):
         num_heads=12,
         mlp_ratio=4.0,
         qkv_bias=True,
+        qk_norm=False,
         init_values=None,
         class_token=True,
         no_embed_class=True,
@@ -113,7 +134,7 @@ class TimmViT(VisionTransformer, ResizingInterface):
             which block structure to use; for parallel attention layers, ...
         """
 
-        super(TimmViT, self).__init__(
+        init_kwargs = dict(
             img_size=img_size,
             patch_size=patch_size,
             in_chans=in_chans,
@@ -130,7 +151,6 @@ class TimmViT(VisionTransformer, ResizingInterface):
             pre_norm=pre_norm,
             fc_norm=fc_norm,
             drop_rate=drop_rate,
-            proj_drop_rate=drop_rate,
             attn_drop_rate=attn_drop_rate,
             drop_path_rate=drop_path_rate,
             weight_init=weight_init,
@@ -139,6 +159,13 @@ class TimmViT(VisionTransformer, ResizingInterface):
             act_layer=act_layer,
             block_fn=block_fn,
         )
+
+        self.new_version = False  # TODO: check based on the timm version
+
+        if self.new_version:
+            init_kwargs["qk_norm"] = qk_norm
+            init_kwargs["proj_drop_rate"] = drop_rate
+        super(TimmViT, self).__init__(**init_kwargs)
         self.embed_layer = embed_layer
         self.img_size = img_size
         self.patch_size = patch_size
@@ -147,13 +174,15 @@ class TimmViT(VisionTransformer, ResizingInterface):
         self.class_token = class_token
         self.no_embed_class = no_embed_class
         self.num_classes = num_classes
+        self.num_heads = num_heads
+        self.depth = depth
         self.save_attention_maps = save_attention_maps
         if save_attention_maps:
             self.do_save_attention_maps()
         try:
             use_fused = self.blocks[0].attn.fused_attn
             print(f"Use fused attention: {use_fused}")
-        except:
+        except:  # I'm lazy for now  # noqa: E722
             pass
 
     def do_save_attention_maps(self):
@@ -168,10 +197,12 @@ class TimmViT(VisionTransformer, ResizingInterface):
     def forward_features(self, x, debug=False):
         x = self.patch_embed(x)
         x = self._pos_embed(x)
-        x = self.patch_drop(x)
+        if self.new_version:
+            x = self.patch_drop(x)
         x = self.norm_pre(x)
         if debug:
-            for block in self.blocks:
+            for i, block in enumerate(self.blocks):
+                print(f"Block {i}")
                 x = block(x, debug=True)
         else:
             x = self.blocks(x)
@@ -179,6 +210,9 @@ class TimmViT(VisionTransformer, ResizingInterface):
         return x
 
     def forward(self, x, debug=False):
-        x = self.forward_features(x, debug=debug)
+        if debug:
+            x = self.forward_features(x, debug=debug)
+        else:
+            x = self.forward_features(x)
         x = self.forward_head(x)
         return x

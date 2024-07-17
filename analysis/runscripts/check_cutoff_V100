@@ -1,0 +1,17 @@
+#!/bin/sh
+
+echo python3 check_cutoff.py "$@"
+
+srun -K \
+    --partition=V100-32GB-SDS \
+    --gpus-per-task=1 \
+    --gpu-bind=none \
+    --container-image=/netscratch/nauen/images/custom_ViT_v10.sqsh \
+    --container-workdir="`pwd`" \
+    --container-mounts=/netscratch/$USER:/netscratch/$USER,/ds-sds:/ds-sds:ro,"`pwd`":"`pwd`" \
+    --job-name="Taylor-Attention Tipping Point" \
+    --ntasks=1 \
+    --cpus-per-task=4 \
+    --mem=32G \
+    --time=02:00:00 \
+python3 check_cutoff.py "$@"

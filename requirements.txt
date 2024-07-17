@@ -1,2 +1,2 @@
 torch
-timm
+timm==0.8.10

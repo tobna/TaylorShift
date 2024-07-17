@@ -1,0 +1,9 @@
+torch==2.2.0
+datadings==3.4.6
+timm==0.9.12
+torchprofile==0.0.4
+fvcore==0.1.5
+einops==0.7.0
+reformer-pytorch==1.4.4
+torcheval==0.0.7
+torchvision==0.17.0

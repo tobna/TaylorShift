@@ -1,8 +1,9 @@
 import torch
 from timm.models import register_model
 from torch import nn
-from vit import TimmViT
-from utils import vit_sizes
+
+from architectures.vit import TimmViT
+from resizing_interface import vit_sizes
 
 
 class Transformer(TimmViT):
@@ -12,7 +13,8 @@ class Transformer(TimmViT):
         pos_embed = torch.zeros(max_seq_len, self.embed_dim)
         pos = torch.arange(0, max_seq_len, dtype=torch.float).unsqueeze(1)
         div_term = torch.exp(
-            torch.arange(0, self.embed_dim, 2).float() * (-torch.log(torch.tensor(10000.0)) / self.embed_dim)
+            torch.arange(0, self.embed_dim, 2).float()
+            * (-torch.log(torch.tensor(10000.0)) / self.embed_dim)
         )
 
         pos_embed[:, 0::2] = torch.sin(pos * div_term)
@@ -21,11 +23,19 @@ class Transformer(TimmViT):
         self.register_buffer("pe", pos_embed.view(1, max_seq_len, self.embed_dim))
         del self.pos_embed
 
+    def set_input_dim(self, input_dim):
+        old_in_dim = self.patch_embed.in_features
+        if input_dim == old_in_dim:
+            return
+
+        self.patch_embed = nn.Linear(input_dim, self.embed_dim)
+
     def set_max_seq_len(self, max_seq_len):
         pos_embed = torch.zeros(max_seq_len, self.embed_dim)
         pos = torch.arange(0, max_seq_len, dtype=torch.float).unsqueeze(1)
         div_term = torch.exp(
-            torch.arange(0, self.embed_dim, 2).float() * (-torch.log(torch.tensor(10000.0)) / self.embed_dim)
+            torch.arange(0, self.embed_dim, 2).float()
+            * (-torch.log(torch.tensor(10000.0)) / self.embed_dim)
         )
 
         pos_embed[:, 0::2] = torch.sin(pos * div_term)
@@ -59,46 +69,62 @@ class Transformer(TimmViT):
 @register_model
 def transformer_classifier_ti(input_dim, max_seq_len, **kwargs):
     sizes = vit_sizes["Ti"]
-    return Transformer(max_seq_len=max_seq_len, input_dim=input_dim, **{**sizes, **kwargs})
+    return Transformer(
+        max_seq_len=max_seq_len, input_dim=input_dim, **{**sizes, **kwargs}
+    )
 
 
 @register_model
 def transformer_classifier_s(input_dim, max_seq_len, **kwargs):
     sizes = vit_sizes["S"]
-    return Transformer(max_seq_len=max_seq_len, input_dim=input_dim, **{**sizes, **kwargs})
+    return Transformer(
+        max_seq_len=max_seq_len, input_dim=input_dim, **{**sizes, **kwargs}
+    )
 
 
 @register_model
 def transformer_classifier_b(input_dim, max_seq_len, **kwargs):
     sizes = vit_sizes["B"]
-    return Transformer(max_seq_len=max_seq_len, input_dim=input_dim, **{**sizes, **kwargs})
+    return Transformer(
+        max_seq_len=max_seq_len, input_dim=input_dim, **{**sizes, **kwargs}
+    )
 
 
 @register_model
 def transformer_classifier_l(input_dim, max_seq_len, **kwargs):
     sizes = vit_sizes["L"]
-    return Transformer(max_seq_len=max_seq_len, input_dim=input_dim, **{**sizes, **kwargs})
+    return Transformer(
+        max_seq_len=max_seq_len, input_dim=input_dim, **{**sizes, **kwargs}
+    )
 
 
 @register_model
 def transformer_lra(input_dim, max_seq_len, **kwargs):
     sizes = dict(embed_dim=512, depth=4, num_heads=8, mlp_ratio=2.0)
-    return Transformer(max_seq_len=max_seq_len, input_dim=input_dim, **{**sizes, **kwargs})
+    return Transformer(
+        max_seq_len=max_seq_len, input_dim=input_dim, **{**sizes, **kwargs}
+    )
 
 
 @register_model
 def transformer_lra_imdb(input_dim, max_seq_len, **kwargs):
     sizes = dict(embed_dim=256, depth=4, num_heads=4, mlp_ratio=4.0)
-    return Transformer(max_seq_len=max_seq_len, input_dim=input_dim, **{**sizes, **kwargs})
+    return Transformer(
+        max_seq_len=max_seq_len, input_dim=input_dim, **{**sizes, **kwargs}
+    )
 
 
 @register_model
 def transformer_lra_cifar(input_dim, max_seq_len, **kwargs):
     sizes = dict(embed_dim=256, depth=1, num_heads=4, mlp_ratio=1.0)
-    return Transformer(max_seq_len=max_seq_len, input_dim=input_dim, **{**sizes, **kwargs})
+    return Transformer(
+        max_seq_len=max_seq_len, input_dim=input_dim, **{**sizes, **kwargs}
+    )
 
 
 @register_model
 def transformer_lra_path(input_dim, max_seq_len, **kwargs):
     sizes = dict(embed_dim=64, depth=4, num_heads=4, mlp_ratio=1.0)
-    return Transformer(max_seq_len=max_seq_len, input_dim=input_dim, **{**sizes, **kwargs})
+    return Transformer(
+        max_seq_len=max_seq_len, input_dim=input_dim, **{**sizes, **kwargs}
+    )

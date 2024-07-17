@@ -1,14 +1,19 @@
 # TaylorShift: Shifting the Complexity of Self-Attention from Squared to Linear and Back using Taylor-Softmax
 
-This will be the code appendix for the paper *[TaylorShift: Shifting the Complexity of Self-Attention from Squared to Linear (and Back) using Taylor-Softmax](https://arxiv.org/abs/2403.02920)*.
+This is the code appendix for the paper [*TaylorShift: Shifting the Complexity of Self-Attention from Squared to Linear (and Back) using Taylor-Softmax*](https://arxiv.org/abs/2403.02920).
 
 For now, we can only include the code for the TaylorShift attention mechanism and models.
 We will include the code for the experiments and analysis later on.
 Our code is based on the [Timm](https://github.com/huggingface/pytorch-image-models) package, which is a PyTorch package for computer vision models.
 
+## Updates
+- [17.07.2024] We release the code for the [training](training/README.md) :test_tube:
+- [17.07.2024] We release the code for [validating out theoretical analysis](analysis/README.md) :mag:
+
+
 ## Models
 
-You can instatiate a Transformer or ViT model with the TaylorShift attention mechanism by importing the corresponding classes from `taylor_shift`:
+You can instantiate a Transformer or ViT model with the TaylorShift attention mechanism by importing the corresponding classes from `taylor_shift`:
 
 ### Transformer Architecture
 
@@ -80,14 +85,19 @@ y_eff = attn._efficient_attention(q, k, v)
 print(f"Difference: abs={(y_dir - y_eff).abs().mean(dim=0).max()} -> rel={(2* (y_dir - y_eff)/(y_dir + y_eff)).abs().mean(dim=0).max()}")
 ```
 
-## Citation
-```BibTeX
+## Experiments
+See [training/README.md](training/README.md) for training code. 
+
+
+# Citation
+If you use this code in your project, please cite:
+```BibTex
 @misc{Nauen2024TaylorShift,
-      title         = {TaylorShift: Shifting the Complexity of Self-Attention from Squared to Linear (and Back) using Taylor-Softmax},
-      author        = {Tobias Christian Nauen and Sebastian Palacio and Andreas Dengel},
-      year          = {2024},
-      eprint        = {2403.02920},
-      archivePrefix = {arXiv},
-      primaryClass  = {cs.LG}
+      title={TaylorShift: Shifting the Complexity of Self-Attention from Squared to Linear (and Back) using Taylor-Softmax}, 
+      author={Tobias Christian Nauen and Sebastian Palacio and Andreas Dengel},
+      year={2024},
+      eprint={2403.02920},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
 }
 ```
