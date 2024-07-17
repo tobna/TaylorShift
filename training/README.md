@@ -85,6 +85,6 @@ For a list of all arguments, run
 ```
 
 ## License
-We release this code under the [MIT license](./LICENSE).
+We release this code under the [MIT license](../LICENSE).
 
 
