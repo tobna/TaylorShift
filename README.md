@@ -7,6 +7,7 @@ We will include the code for the experiments and analysis later on.
 Our code is based on the [Timm](https://github.com/huggingface/pytorch-image-models) package, which is a PyTorch package for computer vision models.
 
 ## Updates
+- [18.07.2024] We have updated the paper on [ArXiv](https://arxiv.org/abs/2403.02920) :newspaper_roll:
 - [17.07.2024] We release the code for the [training](training/README.md) :test_tube:
 - [17.07.2024] We release the code for [validating out theoretical analysis](analysis/README.md) :mag:
 
