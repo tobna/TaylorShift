@@ -94,12 +94,14 @@ class TaylorShiftAttention(nn.Module):
         attn = q @ k.transpose(-2, -1)
         attn_max = attn.abs().max(dim=-1).values.view(*attn.shape[:-1], 1)
         max_val = self.a * attn_max.square() + self.b * attn_max + self.c
-        if self.output_normalized:
-            max_val *= sqrt(d / N)
         attn = self.a * (attn / max_val.sqrt()).square() + self.b * (attn / max_val) + self.c / max_val
 
         attn = attn / attn.sum(-1).view(*attn.shape[:-1], 1)
         attn = self.attn_drop(attn)
+
+        if self.output_normalized:
+            v *= sqrt(d / N)
+
         return attn @ v
 
     def forward(self, x):
