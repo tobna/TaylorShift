@@ -100,7 +100,7 @@ class TaylorShiftAttention(nn.Module):
         attn = self.attn_drop(attn)
 
         if self.output_normalized:
-            v *= sqrt(d / N)
+            v *= sqrt(N / d)
 
         return attn @ v
 
