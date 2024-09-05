@@ -9,7 +9,16 @@ from math import sqrt
 
 
 @torch.jit.script
-def box_tensor(a, b):
+def box_tensor(a: torch.Tensor, b: torch.Tensor) -> torch.Tensor:
+    """Calculate a ⊠ b.
+
+    Args:
+        a (torch.Tensor): Tensor of shape (..., N, d)
+        b (torch.Tensor): Tensor of shape (..., N, d)
+
+    Returns:
+        torch.Tensor: Tensor of shape (..., N, d^2)
+    """
     return (a.unsqueeze(-1) * b.unsqueeze(-2)).view(list(a.shape)[:-1] + [-1])
 
 
