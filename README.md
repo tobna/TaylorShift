@@ -1,3 +1,9 @@
+[![Project Page](https://img.shields.io/badge/Project%20Page-darkred)](https://tobias.nauen-it.de/publication/taylor-shift/)
+[![ICPR Abstract](https://img.shields.io/badge/ICPR%202024-Abstract-forest)](https://link.springer.com/chapter/10.1007/978-3-031-78172-8_1)
+[![arXiv](https://img.shields.io/badge/arXiv-2403.02920-b31b1b?logo=arxiv)](https://arxiv.org/abs/2403.02920)
+![Two Modes](https://img.shields.io/badge/Modes-Efficient%20&%20Direct-purple)
+[![Static Badge](https://img.shields.io/badge/Citation-BibTeX-blue)](https://tobias.nauen-it.de/publication/taylor-shift/cite.bib)
+
 # TaylorShift: Shifting the Complexity of Self-Attention from Squared to Linear and Back using Taylor-Softmax
 
 This is the code appendix for the paper [*TaylorShift: Shifting the Complexity of Self-Attention from Squared to Linear (and Back) using Taylor-Softmax*](https://arxiv.org/abs/2403.02920).
@@ -7,6 +13,7 @@ We will include the code for the experiments and analysis later on.
 Our code is based on the [Timm](https://github.com/huggingface/pytorch-image-models) package, which is a PyTorch package for computer vision models.
 
 ## Updates
+- [03.12.2024] *TaylorShift* was published in the [ICPR 2024 proceedings](https://link.springer.com/chapter/10.1007/978-3-031-78172-8_1) :book:
 - [07.09.2024] We have created a [blog post on *TaylorShift*](https://tobias.nauen-it.de/publication/taylor-shift/), containing a condensed version of the paper and all the important links.
 - [01.08.2024] We are happy to anounce that *TaylorShift* has been **accepted for publication at ICPR 2024** :tada: :fireworks:
 - [18.07.2024] We have updated the paper on [ArXiv](https://arxiv.org/abs/2403.02920) :newspaper_roll:
@@ -95,12 +102,17 @@ See [training/README.md](training/README.md) for training code.
 # Citation
 If you use this code in your project, please cite:
 ```BibTex
-@misc{Nauen2024TaylorShift,
-      title={TaylorShift: Shifting the Complexity of Self-Attention from Squared to Linear (and Back) using Taylor-Softmax}, 
-      author={Tobias Christian Nauen and Sebastian Palacio and Andreas Dengel},
-      year={2024},
-      eprint={2403.02920},
-      archivePrefix={arXiv},
-      primaryClass={cs.LG},
+@inproceedings{Nauen2024TaylorShift,
+  title     = {TaylorShift: Shifting the Complexity of Self-Attention from Squared to Linear (and Back) using Taylor-Softmax},
+  author    = {Tobias Christian Nauen and Sebastian Palacio and Andreas Dengel},
+  note      = {ICPR 2024 (oral)},
+  editor    = {Antonacopoulos, Apostolos and Chaudhuri, Subhasis and Chellappa, Rama and Liu, Cheng-Lin and Bhattacharya, Saumik and Pal, Umapada},
+  booktitle = {Pattern Recognition},
+  year      = {2024},
+  publisher = {Springer Nature Switzerland},
+  address   = {Cham},
+  pages     = {1--16},
+  isbn      = {978-3-031-78172-8},
+  doi       = {10.1007/978-3-031-78172-8_1}
 }
 ```
