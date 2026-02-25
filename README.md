@@ -1,8 +1,8 @@
-[![Project Page](https://img.shields.io/badge/Project%20Page-darkred)](https://tobias.nauen-it.de/publication/taylor-shift/)
+[![Project Page](https://img.shields.io/badge/Project%20Page-darkred)](https://nauen-it.de/publication/taylor-shift/)
 [![ICPR Abstract](https://img.shields.io/badge/ICPR%202024-Abstract-forest)](https://link.springer.com/chapter/10.1007/978-3-031-78172-8_1)
 [![arXiv](https://img.shields.io/badge/arXiv-2403.02920-b31b1b?logo=arxiv)](https://arxiv.org/abs/2403.02920)
 ![Two Modes](https://img.shields.io/badge/Modes-Efficient%20&%20Direct-purple)
-[![Static Badge](https://img.shields.io/badge/Citation-BibTeX-blue)](https://tobias.nauen-it.de/publication/taylor-shift/cite.bib)
+[![Static Badge](https://img.shields.io/badge/Citation-BibTeX-blue)](https://nauen-it.de/publication/taylor-shift/cite.bib)
 
 # TaylorShift: Shifting the Complexity of Self-Attention from Squared to Linear and Back using Taylor-Softmax
 
@@ -14,7 +14,7 @@ Our code is based on the [Timm](https://github.com/huggingface/pytorch-image-mod
 
 ## Updates
 - [03.12.2024] *TaylorShift* was published in the [ICPR 2024 proceedings](https://link.springer.com/chapter/10.1007/978-3-031-78172-8_1) :book:
-- [07.09.2024] We have created a [blog post on *TaylorShift*](https://tobias.nauen-it.de/publication/taylor-shift/), containing a condensed version of the paper and all the important links.
+- [07.09.2024] We have created a [blog post on *TaylorShift*](https://nauen-it.de/publication/taylor-shift/), containing a condensed version of the paper and all the important links.
 - [01.08.2024] We are happy to anounce that *TaylorShift* has been **accepted for publication at ICPR 2024** :tada: :fireworks:
 - [18.07.2024] We have updated the paper on [ArXiv](https://arxiv.org/abs/2403.02920) :newspaper_roll:
 - [17.07.2024] We release the code for the [training](training/README.md) :test_tube:
